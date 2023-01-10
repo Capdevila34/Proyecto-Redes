@@ -1,0 +1,40 @@
+import java.io.File;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.spi.SelectorProvider;
+import java.nio.file.Files;
+import java.util.Iterator;
+import java.util.Set;
+
+
+public class ro2021send 
+{
+    public static void main(String[] args) 
+    {
+        if(args.length!=5)
+        {
+            System.out.println("ro2021send input_file dest_IP dest_port emulator_IP emulator_port");
+            System.exit(1);    
+        } 
+
+        try
+        {
+            InetAddress ipDestino=InetAddress.getByName(args[1]);
+            InetAddress ipEmulador=InetAddress.getByName(args[3]);
+            int puerto =Integer.parseInt(args[2]);
+            int numeroSecuencia=0;
+            int iniVentana=0;
+            int finVentana=20;
+            byte[] datosArchivo= Files.readAllBytes(new File(args[0]).toPath());
+            SocketAddress elSocket2= new InetSocketAddress(ipEmulador, Integer.parseInt(args[4]));
+            DatagramChannel elCanal1= DatagramChannel.open();
+            elCanal1.configureBlocking(false);
+            elCanal1.connect(elSocket2);
+            Selector elDeLectura = SelectorProvider.provider().openSelector();
+            Selector elDeEscritura 
